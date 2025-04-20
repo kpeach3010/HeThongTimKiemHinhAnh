@@ -4,11 +4,11 @@
 git clone https://github.com/kpeach3010/HeThongTimKiemHinhAnh.git
 cd HeThongTimKiemHinhAnh
 
-# Tạo môi trường ảo (tuỳ chọn)
+#### Tạo môi trường ảo (tuỳ chọn)
 python -m venv .venv
 source .venv/bin/activate  # Trên macOS/Linux
-# hoặc
+#### hoặc
 .venv\Scripts\activate  # Trên Windows
 
-# Cài đặt thư viện
+#### Cài đặt thư viện
 pip install -r requirements.txt
