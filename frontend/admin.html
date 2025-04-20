@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicQuest - Admin</title>
+    <link rel="icon" href="logo.png">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --secondary: #4f46e5;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-dark: rgba(15, 23, 42, 0.8);
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--light);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.light {
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        body.light .header,
+        body.light .footer {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        body.light .tab-content {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        body.light .data-table th {
+            background: var(--primary);
+            color: var(--light);
+        }
+
+        body.light .data-table td {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark);
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+            background: var(--glass-dark);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+
+        .center-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo-img {
+            height: 40px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(180deg);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 6rem;
+            padding: 2rem 1rem;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .tab-btn {
+            padding: 1rem 2rem;
+            background: var(--glass);
+            border: none;
+            border-radius: 0.5rem;
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+        }
+
+        .tab-content {
+            background: var(--glass-dark);
+            padding: 2rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass);
+        }
+
+        .data-table th {
+            background: var(--glass);
+            font-weight: 600;
+        }
+
+        .data-table tr:hover td {
+            background: var(--glass);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-edit {
+            background: var(--warning);
+            color: var(--light);
+        }
+
+        .btn-delete {
+            background: var(--error);
+            color: var(--light);
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: var(--light);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .upload-btn {
+            background: var(--primary);
+            color: var(--light);
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .upload-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .user-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .image-gallery {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .sub-tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            padding-left: 1.8em;
+        }
+
+        .sub-tab {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-color);
+            border: none;
+        }
+
+        .sub-tab.active {
+            background: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .image-preview {
+            color: var(--accent-color);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* Image Gallery Modal */
+        .gallery-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .gallery-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 1000px;
+            background: var(--primary-color);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .status-disabled {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .footer {
+            background: var(--glass-dark);
+            padding: 4rem 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .data-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <a href="#" class="logo">
+                    <i class='bx bx-user'></i>
+                    PicQuest Admin
+                </a>
+                <div class="center-logo">
+                    <a href="index.html">
+                        <img src="logo.png" alt="Logo" class="logo-img">
+                    </a>
+                </div>
+            </div>
+            <div style="display:flex; gap: 24px">
+
+                <button id="logout-btn" class="upload-btn">
+                    <i class='bx bx-log-out'></i>
+                    Đăng xuất
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('accounts')">Quản lý tài khoản</button>
+            <button class="tab-btn" onclick="showTab('vip')">Nâng cấp VIP</button>
+        </div>
+
+        <!-- Accounts Section -->
+        <div id="accountsTab" class="content-section">
+            <h2>Quản lý tài khoản</h2>
+
+            <div class="sub-tabs">
+                <button class="sub-tab active" data-tab="uploaded">Tài khoản đã upload hình</button>
+                <button class="sub-tab" data-tab="disabled">Tài khoản bị vô hiệu hóa</button>
+            </div>
+
+            <!-- Uploaded Images Tab -->
+            <div id="uploadedTab" class="tab-content active" style="padding-top: 0">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>Ảnh đã upload</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="uploadedAccountsTable"></tbody>
+                </table>
+            </div>
+
+            <!-- Disabled Accounts Tab -->
+            <div id="disabledTab" class="tab-content" style="padding-top: 0">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Họ tên</th>
+                            <th>Email</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="disabledAccountsTable"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Image Gallery Modal -->
+        <div class="gallery-modal" id="imageGallery">
+            <div class="gallery-content">
+                <div class="modal-header">
+                    <h2>Ảnh đã upload</h2>
+                    <span class="close-modal" onclick="closeGallery()">&times;</span>
+                </div>
+                <div class="gallery-grid" id="galleryGrid"></div>
+            </div>
+        </div>
+
+        <!-- VIP Management Tab -->
+        <div id="vipTab" class="tab-content" style="display: none;">
+            <h2>Nâng cấp VIP</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Họ tên</th>
+                        <th>Email</th>
+                        <th>Ảnh đã upload</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="vipRequestTable"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Về PicQuest</h4>
+                <ul class="footer-links">
+                    <li><a href="#">📌 Hệ thống tìm kiếm ảnh thông minh – PicQuest</a></li>
+                    <li><a href="#">📌 Nghiên cứu & phát triển – Đại học Cần Thơ</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Thông tin liên hệ</h4>
+                <ul class="footer-links">
+                    <li><a href="#">📩 Email: khanhb2207529@student.ctu.edu.vn</a></li>
+                    <li><a href="#">📞 Liên hệ: 0901086499 </a></li>
+                    <li><a href="#">📍 Địa chỉ: Trường CNTT & TT, Đại học Cần Thơ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Chính sách & Điều khoản</h4>
+                <ul class="footer-links">
+                    <li><a href="#">📜 Chính sách bảo mật</a></li>
+                    <li><a href="#">📜 Điều khoản sử dụng</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#4f46e5' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#4f46e5',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false,
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+            },
+            retina_detect: true
+        });
+
+        let userData = [];
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            await fetchUserData(); // Chờ dữ liệu trước khi thực hiện các thao tác khác
+            populateTables(); // Cập nhật bảng ngay khi có dữ liệu
+        });
+
+        async function fetchUserData() {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.error("Token không tồn tại. Hãy đăng nhập trước.");
+                return;
+            }
+
+            try {
+                const response = await fetch("http://localhost:8000/api/user-images/", {
+                    method: "GET",
+                    headers: {
+                        "Authorization": `Token ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Không thể tải dữ liệu.");
+                }
+
+                const data = await response.json();
+                userData = data.users; // Cập nhật biến toàn cục
+                console.log("Dữ liệu user-images:", userData);
+            } catch (error) {
+                console.error("Lỗi khi gọi API:", error);
+            }
+        }
+
+
+            function showTab(tabName) {
+                const tabs = document.querySelectorAll('.tab-content');
+                const buttons = document.querySelectorAll('.tab-btn');
+
+                tabs.forEach(tab => {
+                    tab.style.display = 'none';
+                });
+
+                document.getElementById(`${tabName}Tab`).style.display = 'block';
+                event.target.classList.add('active');
+
+                if (tabName == 'vip') {
+                    document.querySelectorAll('.sub-tabs')[0].style.display = 'none';
+                    buttons[0].classList.remove('active')
+                    buttons[1].classList.add('active')
+                } else {
+                    document.querySelectorAll('.sub-tabs')[0].style.display = 'block';
+                    document.getElementById('uploadedTab').style.display = 'block';
+                    document.getElementById('disabledTab').style.display = 'none';
+                    buttons[1].classList.remove('active')
+                    buttons[0].classList.add('active')
+                }
+            }
+
+        // Tab switching
+        document.querySelectorAll('.sub-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs
+                document.querySelectorAll('.sub-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+
+                // Add active class to clicked tab
+                tab.classList.add('active');
+                // document.getElementById(`${tab.dataset.tab}Tab`).classList.add('active');
+                document.getElementById(`${tab.dataset.tab}Tab`).style.display = 'block';
+
+                // Populate table based on active tab
+                populateTables();
+            });
+        });
+
+        function populateTables() {
+            if (!userData.length) return; // Đảm bảo có dữ liệu trước khi render
+
+            // Populate uploaded accounts table
+            const uploadedTable = document.getElementById('uploadedAccountsTable');
+            const uploadedAccounts = userData.filter(user =>
+                user.is_active && user.image_names.length > 0
+            );
+
+            console.log('uploadedAccounts', uploadedAccounts)
+            uploadedTable.innerHTML = uploadedAccounts.map(user => `
+                <tr>
+                    <td>#${user.id.toString().padStart(3, '0')}</td>
+                    <td>${user.first_name} ${user.last_name}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <div class="image-gallery">
+                            ${user.image_names.slice(0, 2).map(img => `
+                                <img src="http://localhost:8000/media/${img}" alt="User Image" class="user-image">
+                            `).join('')}
+                            ${user.image_names.length > 2 ? `
+                                <a class="image-preview" onclick="showGallery(${user.id})">
+                                    +${user.image_names.length - 2} more
+                                </a>
+                            ` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-delete" onclick="disableAccount(${user.id})">
+                                <i class='bx bx-lock'></i>
+                                Vô hiệu hóa
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Populate disabled accounts table
+            const disabledTable = document.getElementById('disabledAccountsTable');
+            const disabledAccounts = userData.filter(user => !user.is_active);
+
+            disabledTable.innerHTML = disabledAccounts.map(user => `
+                <tr>
+                    <td>#${user.id.toString().padStart(3, '0')}</td>
+                    <td>${user.first_name} ${user.last_name}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-edit" style="background-color: green; color: white;" onclick="enableAccount(${user.id})">
+                                <i class='bx bx-undo'></i>
+                                Khôi phục
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+
+            // Populate disabled accounts table
+            const vipRequestTable = document.getElementById('vipRequestTable');
+            const vipRequestAccounts = userData.filter(user => user.vip === 'pending');
+            vipRequestTable.innerHTML = vipRequestAccounts.map(user => `
+                <tr>
+                    <td>#${user.id.toString().padStart(3, '0')}</td>
+                    <td>${user.first_name} ${user.last_name}</td>
+                    <td>${user.email}</td>
+                    <td>
+                        <div class="image-gallery">
+                            ${user.image_names.slice(0, 2).map(img => `
+                                <img src="http://localhost:8000/media/${img}" alt="User Image" class="user-image">
+                            `).join('')}
+                            ${user.image_names.length > 2 ? `
+                                <a class="image-preview" onclick="showGallery(${user.id})">
+                                    +${user.image_names.length - 2} more
+                                </a>
+                            ` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-approve" onclick="approveUserVipRequest(${user.id})">
+                                <i class='bx bx-check'></i>
+                                Đồng ý
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showGallery(userId) {
+            const user = userData.find(u => u.id === userId);
+            const gallery = document.getElementById('imageGallery');
+            const grid = document.getElementById('galleryGrid');
+
+            grid.innerHTML = user.image_names.map(img => `
+                <div class="gallery-item">
+                    <img src="http://localhost:8000/media/${img}" alt="User uploaded image">
+                </div>
+            `).join('');
+
+            gallery.style.display = 'block';
+        }
+
+        function closeGallery() {
+            document.getElementById('imageGallery').style.display = 'none';
+        }
+
+        async function disableAccount(userId) {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                console.error("Token không tồn tại. Hãy đăng nhập trước.");
+                return;
+            }
+
+            const confirmAction = confirm("Bạn có chắc chắn muốn vô hiệu hóa tài khoản này?");
+            if (!confirmAction) return;
+
+            try {
+                const response = await fetch(`http://localhost:8000/api/disable-user/${userId}/`, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Token ${token}`,
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Không thể vô hiệu hóa tài khoản ${userId}`);
+                }
+
+                console.log(`Tài khoản ${userId} đã bị vô hiệu hóa.`);
+
+                // Tải lại dữ liệu từ API để cập nhật trạng thái mới
+                await fetchUserData();
+                populateTables();
+            } catch (error) {
+                console.error("Lỗi khi vô hiệu hóa tài khoản:", error);
+            }
+        }
+
+
+        async function enableAccount(userId) {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                console.error("Token không tồn tại. Hãy đăng nhập trước.");
+                return;
+            }
+
+            const confirmAction = confirm("Bạn có chắc chắn muốn khôi phục tài khoản này?");
+            if (!confirmAction) return;
+
+            try {
+                const response = await fetch(`http://localhost:8000/api/enable-user/${userId}/`, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Token ${token}`,
+                    },
+                    body: JSON.stringify({})
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Không thể khôi phục tài khoản ${userId}`);
+                }
+
+                console.log(`Tài khoản ${userId} đã được khôi phục.`);
+
+                // Tải lại dữ liệu từ API để cập nhật trạng thái mới
+                await fetchUserData();
+                populateTables();
+            } catch (error) {
+                console.error("Lỗi khi khôi phục tài khoản:", error);
+            }
+        }
+
+        async function approveUserVipRequest(userId) {
+            const token = localStorage.getItem("token"); // Lấy token từ localStorage
+
+            if (!token) {
+                alert("Bạn cần đăng nhập trước khi thực hiện hành động này.");
+                return;
+            }
+
+            const confirmAction = confirm("Bạn có chắc chắn muốn phê duyệt VIP tài khoản này?");
+            if (!confirmAction) return;
+
+            try {
+                const response = await fetch(`http://localhost:8000/api/user-vip-approve/${userId}/`, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Token ${token}`,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert(`Đã phê duyệt VIP cho người dùng ID: ${userId}`);
+                    location.reload(); // Tải lại trang để cập nhật giao diện
+                } else {
+                    alert(`Lỗi: ${data.message || "Không thể phê duyệt VIP."}`);
+                }
+            } catch (error) {
+                console.error("Lỗi khi phê duyệt VIP:", error);
+                alert("Đã xảy ra lỗi, vui lòng thử lại sau.");
+            }
+        }
+
+
+
+        window.onclick = function (event) {
+            const gallery = document.getElementById('imageGallery');
+            if (event.target === gallery) {
+                closeGallery();
+            }
+        }
+
+        populateTables();
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const logoutBtn = document.getElementById("logout-btn"); // Chọn nút Logout
+
+            logoutBtn.addEventListener("click", function () {
+                const token = localStorage.getItem("token"); // Lấy token từ localStorage
+
+                if (!token) {
+                    alert("Bạn chưa đăng nhập!");
+                    window.location.href = "login.html"; // Quay về trang login nếu không có token
+                    return;
+                }
+
+                fetch("http://localhost:8000/api/logout/", {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Token ${token}`
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            localStorage.removeItem("token"); // Xóa token khỏi localStorage
+                            localStorage.removeItem("user"); // Xóa user khỏi localStorage
+                            alert("Đăng xuất thành công!");
+                            window.location.href = "login.html"; // Chuyển về trang login
+                        } else {
+                            return response.json().then(data => {
+                                throw new Error(data.message || "Lỗi khi đăng xuất");
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi đăng xuất:", error);
+                        alert("Đăng xuất thất bại!");
+                    });
+            });
+        });
+
+    </script>
+</body>
+
+</html>

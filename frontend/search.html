@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicQuest - Search</title>
+    <link rel="icon" href="logo.png">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --primary: #1a56db;
+            --secondary: #4f46e5;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-dark: rgba(15, 23, 42, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--dark);
+            color: var(--light);
+            transition: all 0.3s ease;
+        }
+
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.8rem 1.5rem;
+            backdrop-filter: blur(10px);
+            background: var(--glass-dark);
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .center-logo {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .logo-img {
+            height: 40px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 2rem;
+        }
+
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .auth-btn {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            background: var(--primary);
+            color: var(--light);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .user-btn {
+            background: var(--glass) !important;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .user-btn i {
+            font-size: 1.5rem;
+            color: var(--light);
+        }
+
+        .user-btn:hover {
+            background: var(--primary) !important;
+            transform: translateY(-2px);
+        }
+
+        /* Search Section Styles */
+        .search-section {
+            margin-top: 6rem;
+            padding: 2rem 1rem;
+        }
+
+        .search-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--glass-dark);
+            padding: 1rem;
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            background: var(--glass);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1rem;
+            padding: 0.5rem;
+            outline: none;
+        }
+
+        .camera-btn {
+            background: none;
+            border: none;
+            color: var(--light);
+            cursor: pointer;
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .camera-btn:hover {
+            color: var(--primary);
+        }
+
+        .search-btn {
+            padding: 0 0.5rem;
+            border-radius: 0.5rem;
+            border: none;
+            background: var(--primary);
+            color: var(--light);
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: center;
+            align-items: center;
+            gap: 0.3rem;
+            height: 2rem;
+        }
+
+        .search-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .download-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.5);
+            /* Nền trắng trong suốt 50% */
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .download-btn i {
+            font-size: 20px;
+            color: #1a56db;
+            /* Màu xanh */
+        }
+
+        .download-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+
+
+
+
+        /* File Upload Modal */
+        .upload-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .upload-content {
+            background: var(--glass-dark);
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 500px;
+            backdrop-filter: blur(10px);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--glass);
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+        }
+
+        .footer {
+            background: var(--glass-dark);
+            padding: 4rem 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h4 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .search-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 120px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            right: 0;
+            top: 40px;
+            z-index: 1000;
+        }
+
+        .dropdown-menu a,
+        .dropdown-menu button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            text-align: left;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .dropdown-menu a:hover,
+        .dropdown-menu button:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+
+        .error-message {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #ef4444;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            margin: 1rem auto;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .error-message i {
+            font-size: 1.5rem;
+        }
+
+
+        /* Style cho result cards */
+        .results-section {
+            max-width: 1200px;
+            min-height: 150px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .result-card {
+            background: var(--glass-dark);
+            border-radius: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .result-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .result-info {
+            padding: 1rem;
+            background: linear-gradient(transparent, var(--glass-dark));
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover .result-info {
+            transform: translateY(0);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            object-fit: contain;
+        }
+
+        .modal-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-btn i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .modal-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .close-btn {
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 0, 0, 0.4);
+        }
+
+        /* Animation */
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            animation: zoomIn 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="particles-js"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <a href="search.html" class="logo">
+                    <i class='bx bx-search-alt'></i>
+                    PicQuest
+                </a>
+            </div>
+
+            <div class="center-logo">
+                <a href="index.html">
+                    <img src="logo.png" alt="Logo" class="logo-img">
+                </a>
+            </div>
+            <div class="auth-section">
+                <div class="dropdown">
+                    <button class="auth-btn" id="loginBtn">Login</button>
+                    <div class="dropdown-menu" id="userMenu">
+                        <a href="profile.html">
+                            <i class='bx bx-user'></i>
+                            Hồ sơ
+                        </a>
+                        <button id="logout-btn">
+                            <i class='bx bx-log-out'></i>
+                            Đăng xuất
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <div class="search-bar">
+                <div class="search-input-wrapper">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Nhập từ khóa tìm kiếm...">
+                    <button class="camera-btn" onclick="showUploadModal()">
+                        <i class='bx bx-camera'></i>
+                    </button>
+                </div>
+                <button class="search-btn" id="searchButton" onclick="handleTextSearch()">
+                    <i class='bx bx-search'></i>
+                    Tìm kiếm
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section">
+        <div class="results-grid">
+            <div class="result-card">
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Modal -->
+    <div class="upload-modal" id="uploadModal">
+        <div class="upload-content">
+            <h2>Tải lên ảnh để tìm kiếm</h2>
+            <div class="upload-area" onclick="triggerFileInput()">
+                <i class='bx bx-upload' style="font-size: 3rem;"></i>
+                <p>Chọn hoặc thả ảnh vào đây</p>
+            </div>
+            <input type="file" id="fileInput" style="display: none" accept="image/*">
+            <button class="auth-btn" onclick="closeUploadModal()">Hủy</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Về PicQuest</h4>
+                <ul class="footer-links">
+                    <li><a href="#">📌 Hệ thống tìm kiếm ảnh thông minh – PicQuest</a></li>
+                    <li><a href="#">📌 Nghiên cứu & phát triển – Đại học Cần Thơ</a></li>
+                    <li><a href="#">Press</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Thông tin liên hệ</h4>
+                <ul class="footer-links">
+                    <li><a href="#">📩 Email: khanhb2207529@student.ctu.edu.vn</a></li>
+                    <li><a href="#">📞 Liên hệ: 0901086499 </a></li>
+                    <li><a href="#">📍 Địa chỉ: Trường CNTT & TT, Đại học Cần Thơ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Chính sách & Điều khoản</h4>
+                <ul class="footer-links">
+                    <li><a href="#">📜 Chính sách bảo mật</a></li>
+                    <li><a href="#">📜 Điều khoản sử dụng</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Initialize particles.js
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#4f46e5' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#4f46e5',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false,
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+            },
+            retina_detect: true
+        });
+
+        // Modal Functions
+        function showUploadModal() {
+            document.getElementById('uploadModal').style.display = 'flex';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+        }
+
+        function triggerFileInput() {
+            document.getElementById('fileInput').click();
+        }
+
+
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            if (e.target.files && e.target.files[0]) {
+                // Handle file upload here
+                closeUploadModal();
+                handleImageSearch()
+            }
+        });
+
+
+        document.getElementById('uploadModal').addEventListener('click', function (e) {
+            if (e.target === this) {
+                closeUploadModal();
+            }
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateLoginButton();
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateLoginButton();
+        });
+
+        function updateLoginButton() {
+            const user = JSON.parse(localStorage.getItem("user"));
+            const loginBtn = document.getElementById("loginBtn");
+            const userMenu = document.getElementById("userMenu");
+
+            if (loginBtn) {
+                if (user) {
+                    // Nếu đã đăng nhập, đổi nút thành icon user
+                    loginBtn.innerHTML = `<i class='bx bxs-user-rectangle'></i>`;
+                    loginBtn.classList.add("user-btn");
+
+                    // Hiển thị menu khi di chuột vào icon user
+                    loginBtn.addEventListener("mouseenter", function () {
+                        userMenu.classList.add("show");
+                    });
+
+                    // Ẩn menu khi chuột rời khỏi menu hoặc icon user
+                    loginBtn.addEventListener("mouseleave", function () {
+                        setTimeout(() => {
+                            if (!userMenu.matches(":hover")) {
+                                userMenu.classList.remove("show");
+                            }
+                        }, 200); // Delay để tránh mất menu ngay lập tức khi di chuyển chuột
+                    });
+
+                    userMenu.addEventListener("mouseleave", function () {
+                        userMenu.classList.remove("show");
+                    });
+                } else {
+                    // Nếu chưa đăng nhập, hiển thị nút Login
+                    loginBtn.innerHTML = "Login";
+                    loginBtn.onclick = function () {
+                        window.location.href = "login.html";
+                    };
+                }
+            }
+        }
+
+        // Bắt phím enter cho nút tìm kiếm
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("searchInput");
+
+            if (searchInput) {
+                searchInput.addEventListener("keydown", function (event) {
+                    if (event.key === "Enter") {
+                        event.preventDefault(); // Ngăn submit form (nếu có)
+                        handleTextSearch();     // Gọi hàm xử lý
+                    }
+                });
+            }
+        });
+
+
+        async function handleTextSearch() {
+            const query = document.getElementById("searchInput").value.trim();
+            if (!query) return alert("Hãy nhập câu tìm kiếm!");
+            const token = localStorage.getItem("token");
+
+            const resultsGrid = document.querySelector(".results-grid");
+            resultsGrid.innerHTML = "<p>Đang tìm kiếm...</p>"; // Hiển thị trạng thái tìm kiếm
+
+            console.log('query:', JSON.stringify({ text: query }))
+
+            try {
+                const response = await fetch("http://localhost:8000/api/search-by-text/", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Token ${token}`
+                    },
+                    body: JSON.stringify({ text: query })
+                });
+
+                if (!response.ok) throw new Error("Failed to fetch data");
+
+                console.log('response:', response)
+
+                const data = await response.json();
+
+                // Kiểm tra nếu không có kết quả
+                if (!data.retrieved_images || data.retrieved_images.length === 0) {
+                    resultsGrid.innerHTML = "<p>No results found.</p>";
+                    return;
+                }
+
+                // Hiển thị kết quả tìm kiếm
+                resultsGrid.innerHTML = data.retrieved_images.map(image_name => `
+                    <div class="result-card">
+                        <img class="result-image" src="http://localhost:8000/media/${image_name}"
+                         alt="Search result"
+                         onclick="showImage(this)">
+
+                         <button class="download-btn" onclick="downloadImage('http://localhost:8000/media/${image_name}')">
+                            <i class='bx bx-download'></i>
+                         </button>
+                    </div>
+                `).join("");
+
+            } catch (error) {
+                console.error("Error:", error);
+                resultsGrid.innerHTML = `
+                    <div class="error-message">
+                        <i class='bx bx-error-circle'></i>
+                        <span>Bạn đã hết lượt tìm kiếm! Vui lòng thử lại sau.</span>
+                    </div>
+                `;
+            }
+        }
+
+        async function handleImageSearch() {
+            const fileInput = document.getElementById("fileInput");
+            const file = fileInput.files[0];
+
+            if (!file) return alert("Please select an image file!");
+
+            const token = localStorage.getItem("token");
+            const resultsGrid = document.querySelector(".results-grid");
+
+            // Hiển thị trạng thái tìm kiếm
+            resultsGrid.innerHTML = `<p>Đang tìm kiếm ảnh... <span class="loader"></span></p>`;
+
+            const formData = new FormData();
+            formData.append("image", file);
+
+            console.log("image", formData)
+
+            try {
+                const response = await fetch("http://localhost:8000/api/search-by-image/", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Token ${token}`
+                    },
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        alert("Your session has expired. Please log in again.");
+                        localStorage.removeItem("token");
+                        window.location.href = "/login.html";
+                    }
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                console.log("Response Data:", data);
+
+                // Kiểm tra nếu không có kết quả
+                if (!data.retrieved_images || data.retrieved_images.length === 0) {
+                    resultsGrid.innerHTML = "<p>No results found.</p>";
+                    return;
+                }
+
+                // Hiển thị kết quả tìm kiếm
+                resultsGrid.innerHTML = data.retrieved_images.map(image_name => `
+                <div class="result-card">
+                    <img class="result-image"
+                         src="http://localhost:8000/media/${image_name}"
+                         alt="Search result"
+                         onclick="showImage(this)">
+                    <div class="result-info">
+                        <p>"No description available"</p>
+                    </div>
+                    <button class="download-btn" onclick="downloadImage('http://localhost:8000/media/${image_name}')">
+                        <i class='bx bx-download'></i>
+                    </button>
+                </div>
+            `).join("");
+
+
+
+            } catch (error) {
+                console.error("Error:", error);
+                resultsGrid.innerHTML = `
+                    <div class="error-message">
+                        <i class='bx bx-error-circle'></i>
+                        <span>Bạn đã hết lượt tìm kiếm! Vui lòng thử lại sau.</span>
+                    </div>
+                `;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const logoutBtn = document.getElementById("logout-btn");
+
+            logoutBtn.addEventListener("click", function () {
+                const token = localStorage.getItem("token"); // Lấy token từ localStorage
+
+                if (!token) {
+                    alert("Bạn chưa đăng nhập!");
+                    window.location.href = "login.html"; // Quay về trang login nếu không có token
+                    return;
+                }
+
+                fetch("http://localhost:8000/api/logout/", {
+                    method: "DELETE",
+                    headers: {
+                        "Authorization": `Token ${token}`
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            localStorage.removeItem("token"); // Xóa token khỏi localStorage
+                            localStorage.removeItem("user"); // Xóa user khỏi localStorage
+                            alert("Đăng xuất thành công!");
+                            window.location.href = "login.html"; // Chuyển về trang login
+                        } else {
+                            return response.json().then(data => {
+                                throw new Error(data.message || "Lỗi khi đăng xuất");
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi đăng xuất:", error);
+                        alert("Đăng xuất thất bại!");
+                    });
+            });
+        });
+
+        async function downloadImage(imageUrl) {
+            try {
+                // Lấy dữ liệu ảnh từ URL
+                const response = await fetch(imageUrl, { mode: 'cors' }); // Thêm mode: 'cors' nếu cần
+                if (!response.ok) throw new Error("Không thể tải ảnh");
+
+                // Chuyển dữ liệu thành blob
+                const blob = await response.blob();
+
+                // Tạo URL tạm thời cho blob
+                const url = window.URL.createObjectURL(blob);
+
+                // Tạo phần tử <a> để tải xuống
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "downloaded-image.jpg"; // Tên file khi tải về
+                document.body.appendChild(link);
+                link.click();
+
+                // Dọn dẹp
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            } catch (error) {
+                console.error("Lỗi khi tải ảnh: ", error);
+            }
+        }
+
+        // Hàm hiển thị ảnh trong modal
+        function showImage(img) {
+            const modal = document.getElementById("imageModal");
+            const modalImg = document.getElementById("modalImage");
+            const downloadBtn = document.getElementById("downloadModalBtn");
+
+            modal.style.display = "block";
+            modalImg.src = img.src;
+
+            // Cập nhật onclick cho nút download
+            downloadBtn.onclick = function () {
+                downloadImage(img.src);
+            };
+        }
+
+        // Hàm đóng modal
+        function closeImage() {
+            const modal = document.getElementById("imageModal");
+            if (modal) {
+                modal.style.display = "none";
+                console.log("Modal closed"); // Thêm log để debug
+            } else {
+                console.error("Modal element not found");
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Gắn sự kiện cho nút đóng
+            const closeModalBtn = document.getElementById("closeModalBtn");
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener("click", closeImage);
+            }
+
+            // Gắn sự kiện click bên ngoài modal
+            const imageModal = document.getElementById("imageModal");
+            if (imageModal) {
+                imageModal.addEventListener("click", function (event) {
+                    if (event.target === imageModal) {
+                        closeImage();
+                    }
+                });
+            }
+
+            // Gắn sự kiện phím ESC
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    closeImage();
+                }
+            });
+        });
+
+
+
+    </script>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <div class="modal-controls">
+            <button class="modal-btn download-modal-btn" id="downloadModalBtn">
+                <i class='bx bx-download'></i>
+            </button>
+            <button class="modal-btn close-btn" id="closeModalBtn">
+                <i class='bx bx-x'></i>
+            </button>
+        </div>
+        <img class="modal-content" id="modalImage">
+    </div>
+</body>
+
+</html>
