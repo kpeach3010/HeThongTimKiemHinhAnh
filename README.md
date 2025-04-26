@@ -36,4 +36,4 @@ python manage.py runserver
 
 ---
 ## Ghi chủ
-Cần tải tập dữ liệu ảnh trong đường link trên và sửa đổi đường dẫn trong file backend. 
+Cần tải tập dữ liệu ảnh trong đường link trên và sửa đổi đường dẫn trong các file. 
